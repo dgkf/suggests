@@ -51,7 +51,8 @@ suggests_condition <- function(sug, ..., cond = simpleCondition) {
   )
 
   res <- cond(msg)
-  class(res) <- c(subclass, "suggests_condition", class(res))
+  suggests_subclass <- paste0(packageName(), "_", class(res)[[1]])
+  class(res) <- c(subclass, suggests_subclass, class(res))
   res
 }
 

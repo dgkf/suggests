@@ -19,5 +19,5 @@ hello <- function(who = "World") {
   cli::cat_line(paste0("Hello, ", who, "!"))
 
   # cli fails to load (impossible version contraints)
-  cli::cat_alert_danger("Uh oh, no valid version available!") %!% message
+  cli::cli_alert_danger("Uh oh, no valid version available!") %!% message
 }

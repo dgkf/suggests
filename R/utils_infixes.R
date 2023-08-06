@@ -18,6 +18,16 @@
   tryCatch(lhs, error = function(...) rhs)
 }
 
+#' If not suggests error else
+#'
+#' Return the result of the left-hand-side if it does not produce a suggests
+#' error, otherwise return the result of the right-hand-side.
+#'
+#' @export
+`%?s%` <- function(lhs, rhs) {
+  tryCatch(lhs, suggests_error = function(...) rhs)
+}
+
 #' Capture and coerce conditions
 #'
 #' Should the left-hand-side emit a condition (for example, an error, warning
