@@ -1,0 +1,19 @@
+Package: suggests
+Title: Seamless optional package behaviors
+Version: 0.0.0.9000
+Authors@R: 
+    person(
+        "Doug", 
+        "Kelkhoff", 
+        email = "doug.kelkhoff@gmail.com", 
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0009-0003-7845-4061")
+    )
+Description:
+    Tools for embedding optional behavors into packages.
+Imports:
+    utils
+License: AGPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
