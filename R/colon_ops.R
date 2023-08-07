@@ -4,6 +4,8 @@ suggests_double_colon <- function(pkg, name) {
   namesym <- substitute(name)
   if (is_suggests(sug <- try_get_suggests(pkgsym, env))) {
     double_colon(sug, as.character(namesym))
+  } else if (exists(pkgsym, envir = env) && is.character(pkg) && is_suggests(sug <- try_get_suggests(pkg, env))) {
+    double_colon(sug, as.character(namesym))
   } else {
     do.call(getExportedValue("base", "::"), list(pkgsym, namesym))
   }
@@ -21,6 +23,8 @@ suggests_triple_colon <- function(pkg, name) {
   namesym <- substitute(name)
   if (is_suggests(sug <- try_get_suggests(pkgsym, env))) {
     triple_colon(sug, namesym)
+  } else if (exists(pkgsym, envir = env) && is.character(pkg) && is_suggests(sug <- try_get_suggests(pkg, env))) {
+    triple_colon(sug, as.character(namesym))
   } else {
     do.call(getExportedValue("base", ":::"), list(pkgsym, namesym))
   }
@@ -33,20 +37,31 @@ triple_colon <- function(pkg, name) UseMethod("triple_colon")
 triple_colon.default <- getExportedValue("base", ":::")
 
 try_get_suggests <- function(pkg, env = parent.frame()) {
-  pkg <- as.character(pkg)
-  pkgenv <- package_env(env)
+  UseMethod("try_get_suggests")
+}
 
-  if (!exists(".suggests", pkgenv)) {
-    return(NULL)
-  }
+try_get_suggests.default <- function(pkg, env = parent.frame()) {
+  try_get_suggests(as.character(pkg), env)
+}
 
-  suggests_env <- pkgenv[[".suggests"]]
+try_get_suggests.suggests_package <- function(pkg, env = parent.frame()) {
+  pkg
+}
+
+try_get_suggests.suggests_package_stub <- function(pkg, env = parent.env()) {
+  try_get_suggests(unclass(pkg), env = attr(pkg, "where"))
+}
+
+try_get_suggests.character <- function(pkg, env = parent.frame()) {
+  suggests_env <- get_suggests_env(env)
   if (!pkg %in% names(suggests_env$packages)) {
     return(NULL)
   }
 
   sug <- suggests_env$packages[[pkg]]
   suggests_env$packages[[pkg]] <- instantiate_suggests(pkg, sug, suggests_env)
+
+  suggests_env$packages[[pkg]]
 }
 
 instantiate_suggests <- function(pkg, args, env = parent.frame()) {

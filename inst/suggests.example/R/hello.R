@@ -1,8 +1,8 @@
 #' @import suggests
 NULL
 
-suggests::enable()  # defaults to all
-suggests::import(cli)
+suggests::capabilities()  # defaults to all
+test <- suggests::import(cli)
 
 suggests::fallback(cli::cat_line,
   function(..., col, background_col) {
@@ -10,10 +10,14 @@ suggests::fallback(cli::cat_line,
   }
 )
 
+#' @eval suggests::features_as_roxygen_docs()
+#' @export
+features <- function() suggests::features()
+
 #' @export
 hello <- function(who = "World") {
   # inspect suggests package
-  print(cli)
+  print(test)
 
   # use a function with a callback
   cli::cat_line(paste0("Hello, ", who, "!"))

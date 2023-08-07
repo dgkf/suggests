@@ -54,8 +54,18 @@ format.suggests_package <- function(x, ...) {
 }
 
 #' @export
+format.suggests_package_stub <- function(x, ...) {
+  format(try_get_suggests(x), ...)
+}
+
+#' @export
 print.suggests_package <- function(x, ...) {
   cat(format(x, ...), "\n")
+}
+
+#' @export
+print.suggests_package_stub <- function(x, ...) {
+  print(try_get_suggests(x), ...)
 }
 
 #' @export

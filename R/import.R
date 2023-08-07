@@ -15,7 +15,6 @@
 #' @export
 import <- function(pkg, ..., create = FALSE) {
   pkg_expr <- substitute(pkg)
-
   if (is.symbol(pkg_expr)) {
     pkg <- as.character(pkg_expr)
   }
@@ -33,9 +32,12 @@ import <- function(pkg, ..., create = FALSE) {
   spec <- list(pkg, ..., suggests_version = packageVersion(packageName()))
   register_suggested_package(pkg, spec, env)
 
-  if (is_feature_enabled("create", env) || create) {
-    delayedAssign(pkg, instantiate_suggests(pkg, spec, env), assign.env = env)
+  stub <- new_suggests_stub(pkg, env)
+  if (capability_enabled("create", env) || create) {
+    delayedAssign(pkg, stub, assign.env = env)
   }
+
+  invisible(stub)
 }
 
 #' @export
@@ -55,10 +57,17 @@ new_suggests <- function(
   )
 }
 
-new_lazy_suggests <- function(fn) {
-  structure(fn, class = c("lazy_suggests_package", "suggests_package"))
+#' @describeIn new_suggests
+#' A stub of a suggests package, which will reference stored suggests data
+#'
+#' @export
+new_suggests_stub <- function(pkg, where = parent.frame()) {
+  structure(
+    pkg, 
+    where = where, 
+    class = c("suggests_package_stub", "suggests_package")
+  )
 }
-
 
 is_suggests <- function(x) {
   inherits(x, "suggests_package")

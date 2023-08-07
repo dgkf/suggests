@@ -47,7 +47,7 @@ suggests_condition <- function(sug, ..., cond = simpleCondition) {
 
   msg <- paste0(
     "Suggested package '", pkgname, "' is required for this functionality",
-    however
+    however, "\n"
   )
 
   res <- cond(msg)

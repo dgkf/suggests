@@ -41,13 +41,6 @@ Of course these can all be addressed in code, but it's not exactly trivial.
 
 ### Suggests `import`s 
 
-> :construction_worker: _Under Construction_ :construction_worker:
->
-> Though `import()` will create an object of the provided package name, given
-> that `suggests::enable("create")` was used to enable this feature, it can't
-> yet be assigned to a value. Still deciding on a best path forward for lazily
-> loading the namespace to allow it.
-
 Importing a suggested package creates a placeholder that can be used just like a
 package namespace.
 
@@ -69,6 +62,15 @@ Error: Suggested package 'cli' is required for this functionality, but
 dependency version requirement is not met. Version 3.5.0 is installed, but must
 be >=3.6.0.
 ```
+
+> ***Tip***
+>
+> Use `suggests::capabilities("create")` to automatically create a suggests 
+> package object that shares the package's name in your package environment.
+>
+> ```r
+> suggests::import(cli)  # creates "namespace" cli
+> ```
 
 ### Simple Alternatives
 
