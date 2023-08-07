@@ -10,9 +10,10 @@ seamlessly integrate fallback code and clean up your suggests control-flow.
 [`Suggests` dependencies](https://cran.r-project.org/doc/manuals/R-exts.html#Suggested-packages)
 are packages that are not strictly required for a package to function.
 They can be used to give more context for a package, such as in examples,
-vignettes and testing - situations that don't strictly affect the package's
-runtime execution. However, `Suggests` dependencies are also used for package
-behaviors that are not strictly necessary.
+vignettes and testing - behaviors outside of package use. However, `Suggests`
+serve a dual purpose of enhancing package behaviors at runtime. This second
+scenario is largely uncontrolled in the R ecosystem, and is the use case that
+this package aims to improve.
 
 Let's take a look at an example from 
 [the `R` manual](https://cran.r-project.org/doc/manuals/R-exts.html#Suggested-packages), 
