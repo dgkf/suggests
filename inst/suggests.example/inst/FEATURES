@@ -1,0 +1,8 @@
+Feature: cli
+Title: Enhanced Command Line Interface (CLI)
+Description:
+    Provides a prettier and more colorful command line interface when used
+    interactively in a terminal session.
+
+Feature: graphics
+Title: Data Visualizations and other Graphical Outputs

@@ -11,11 +11,10 @@ seamlessly integrate fallback code and clean up your suggests control-flow.
 are packages that are not strictly required for a package to function.
 They can be used to give more context for a package, such as in examples,
 vignettes and testing - behaviors outside of package use. However, `Suggests`
-serve a dual purpose of enhancing package behaviors at runtime. This second
-scenario is largely uncontrolled in the R ecosystem, and is the use case that
-this package aims to improve.
+serve a dual purpose of enhancing package behaviors at runtime. This is the use
+case that this package aims to improve.
 
-Let's take a look at an example from 
+Let's first take a look at an example in base R from 
 [the `R` manual](https://cran.r-project.org/doc/manuals/R-exts.html#Suggested-packages), 
 explaining how a suggested package might enable a new feature:
 
@@ -40,7 +39,7 @@ Of course these can all be addressed in code, but it's not exactly trivial.
 
 ## Feature Overview
 
-### Suggests `import`s 
+### Importing Suggested Package Namespaces
 
 Importing a suggested package creates a placeholder that can be used just like a
 package namespace.
@@ -70,6 +69,7 @@ be >=3.6.0.
 > package object that shares the package's name in your package environment.
 >
 > ```r
+> suggests::capabilities("create")
 > suggests::import(cli)  # creates "namespace" cli
 > ```
 
@@ -125,16 +125,43 @@ function.
 
 If you categorize your `Suggests` packages into features, `suggests` can
 discover them and provide a more user-friendly interface for handling feature-
-enhancing suggests packages..
+enhancing suggests packages.
 
 ```dcf
-Config/suggests/features:
-    Feature: Enhanced Command Line Interface (CLI):
-    Description: 
-        Provides a prettier and more colorful command line interface when used
-        interactively in a terminal session.
-    Suggests:
-        cli
+Suggests:
+    cli (>= 100.0.0),
+    cli (<= 100.0.1),
+	  ggplot2
+Config/suggests/feature/cli:
+    cli
+Config/suggests/feature/graphics:
+    ggplot2
+```
+
+Further details can be provided in `inst/FEATURES`
+
+```dcf
+Feature: cli
+Title: Enhanced Command Line Interface (CLI)
+Description: 
+    Provides a prettier and more colorful command line interface when used
+    interactively in a terminal session.
+
+Feature: graphics
+Title: Data Visualizations and other Graphical Outputs
+```
+
+Or generated using `roxygen2`
+
+```r
+#' @feature cli
+#' Enhanced Command Line Interface (CLI)
+#'
+#' Provides a prettier and more colorful command line interface when used
+#' interactively in a terminal session.
+#'
+#' @feature graphics
+#' Data Visualizations and other Graphical Outputs
 ```
 
 #### Prompt Feature-Enhancing Suggests Installation on Install

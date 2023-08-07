@@ -12,15 +12,13 @@ Description:
 Imports:
     suggests
 Suggests:
-    cli (>= 2.0.0),
-    cli (<= 1.0.0)
-Config/suggests/features:
-    Title: Enhanced Command Line Interface (CLI)
-    Description:
-        Provides a prettier and more colorful command line interface when used
-        interactively in a terminal session.
-    Suggests:
-        cli
+    cli (>= 100.0.0),
+    cli (<= 100.0.1),
+    ggplot2
+Config/suggests/feature/cli:
+    cli
+Config/suggests/feature/graphics:
+    ggplot2
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
