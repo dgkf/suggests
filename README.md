@@ -131,7 +131,7 @@ enhancing suggests packages.
 Suggests:
     cli (>= 100.0.0),
     cli (<= 100.0.1),
-	  ggplot2
+    ggplot2
 Config/suggests/feature/cli:
     cli
 Config/suggests/feature/graphics:
