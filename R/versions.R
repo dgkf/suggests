@@ -38,9 +38,9 @@ version_requirements <- function(x, ...) {
 }
 
 version_requirements.suggests_package <- function(x, ...) {
-  if (!is.null(attr(x, "ver"))) return(attr(x, "ver"))
-  reqs <- version_requirements(attr(x, "pkg"), attr(x, "parent"))
-  attr(x, "ver") <- reqs
+  if (!is.null(x@ver)) return(x@ver)
+  reqs <- version_requirements(x@pkg, x@parent)
+  x@ver <- reqs
   reqs
 }
 
@@ -48,7 +48,7 @@ version_requirements.character <- function(pkg, env = parent.frame(), ...) {
   default <- extract_version_requirement(t(as.matrix(c(Suggests = pkg))), pkg)
 
   suggests_env <- get_suggests_env(env)
-  parent_pkg <- utils::packageName((suggests_env))
+  parent_pkg <- utils::packageName(suggests_env)
   if (is.null(parent_pkg)) return(default)
 
   parent_pkg_dir <- find.package(parent_pkg, quiet = TRUE)
@@ -88,16 +88,13 @@ format_version_requirements <- function(x, ..., collapse = NULL) {
 }
 
 suggests_version_constraints_satisfied <- function(x) {
-  pkg <- attr(x, "pkg")
-  parent_pkg_env <- attr(x, "parent")
-
   # first ensure package is actually found in .libPaths
-  suggests_pkg_dir <- find.package(pkg, quiet = TRUE)
+  suggests_pkg_dir <- find.package(x@pkg, quiet = TRUE)
   if (length(suggests_pkg_dir) < 1) {
     return(FALSE)
   }
 
-  inst_pkg_ver <- packageVersion(pkg)
+  inst_pkg_ver <- packageVersion(x@pkg)
   satisfies_version_requirements(x, inst_pkg_ver)
 }
 

@@ -4,7 +4,7 @@
 #' However, the extent to which this happens may be undesirable. At a minimum,
 #' `suggests` will will add a `.suggests` object to your package namespace. From
 #' there, `suggests` can mask `base` operators in your namespace to streamline
-#' your ' development experience. 
+#' your ' development experience.
 #'
 #' To enable these extra capabilities, you'll have to opt-in to them using
 #' [capabilities()].
@@ -17,7 +17,7 @@
 #'     is attempted to be accessed.
 #'   }
 #'   \item{"create"}{
-#'     Creates an object of the packages name in the calling namespace '
+#'     Creates an object of the packages name in the calling namespace
 #'     automatically. It can be indexed just like a package namespace, using
 #'     the `::` and `:::` operators (if feature "colon" is enabled), or
 #'     using `$`.
@@ -25,11 +25,11 @@
 #' }
 #'
 #' @examples
-#' \dontrun{capabilities("colon")
+#' \dontrun{enable_capabilities("colon")
 #' utils <- suggests("utils")
 #' utils::head(1:10)
 #'
-#' capabilities("create")
+#' enable_capabilities("create")
 #' suggests("not.a.real.package")
 #' not.a.real.package::head(1:10)
 #' # Error: This feature is unavailable because package 'not.a.real.package'
@@ -37,7 +37,7 @@
 #' }
 #'
 #' @export
-capabilities <- function(
+enable_capabilities <- function(
   name = c("colon", "create"),
   env = parent.frame()
 ) {
@@ -56,11 +56,7 @@ capability_enabled <- function(name, env = parent.frame()) {
 }
 
 capability_enable_colons <- function(env = parent.frame()) {
-  suggests_env <- get_suggests_env(env)
-
   # inject masked `::` and `:::` operators
   assign("::", suggests_double_colon, package_env(env))
   assign(":::", suggests_triple_colon, package_env(env))
-
-  invisible(suggests_env)
 }

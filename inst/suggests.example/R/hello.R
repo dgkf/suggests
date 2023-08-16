@@ -1,8 +1,7 @@
 #' @import suggests
 NULL
 
-suggests::capabilities()  # defaults to all
-test <- suggests::import(cli)
+cli <- suggests::import(cli)
 
 suggests::fallback(cli::cat_line,
   function(..., col, background_col) {
@@ -16,9 +15,6 @@ features <- function() suggests::features()
 
 #' @export
 hello <- function(who = "World") {
-  # inspect suggests package
-  print(test)
-
   # use a function with a callback
   cli::cat_line(paste0("Hello, ", who, "!"))
 

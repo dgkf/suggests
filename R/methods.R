@@ -26,7 +26,7 @@
   if (suggests_loaded(x)) {
     stop(sprintf(
       "Suggested package '%s' does not provide function '%s'",
-      attr(x, "pkg"),
+      suggests_name(x),
       name
     ))
   }
@@ -36,9 +36,28 @@
 }
 
 #' @export
+`@.suggests_package` <- function(x, name) {
+  data <- get_suggests_metadata(x)
+  data[[name]]
+}
+
+#' @export
+`@<-.suggests_package` <- function(x, name, value) {
+  data <- get_suggests_metadata(x)
+  data[[name]] <- value
+  assign(SUGGESTS_METADATA_NAME, data, envir = x, inherits = FALSE)
+  x
+}
+
+#' @export
+.AtNames.suggests_package <- function(object, pattern, ...) {
+  grep(pattern, names(get_suggests_metadata(object)), value = TRUE)
+}
+
+#' @export
 format.suggests_package <- function(x, ...) {
   ver <- if (suggests_loaded(x)) {
-    packageVersion(attr(x, "pkg"))
+    packageVersion(x@pkg)
   } else if (length(version_requirements(x)) > 0) {
     format_version_requirements(x, collapse = ",")
   } else {
@@ -46,9 +65,9 @@ format.suggests_package <- function(x, ...) {
   }
 
   paste0(
-    "<", "suggests:", attr(x, "pkg"), "[", ver, "]", ">",
-    if (!"success" %in% attr(x, "load_status")) {
-      paste0(" (", paste0(names(attr(x, "load_status")), collapse = ", "), ")")
+    "<", "suggests:", x@pkg, "[", ver, "]", ">",
+    if (!"success" %in% x@status) {
+      paste0(" (", paste0(names(x@status), collapse = ", "), ")")
     }
   )
 }

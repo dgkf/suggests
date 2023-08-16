@@ -40,47 +40,11 @@ import <- function(pkg, ..., create = FALSE) {
   invisible(stub)
 }
 
-#' @export
-new_suggests <- function(
-  pkgname,
-  unavailable_callback = suggests_callback_error,
-  ...
-) {
-  structure(
-    new.env(parent = emptyenv()),
-    pkg = pkgname,
-    ver = NULL, # to be derived lazily after package is built
-    parent = package_env(get_suggests_env()),
-    callback = unavailable_callback,
-    load_status = c("not yet loaded" = "await"),
-    class = "suggests_package"
-  )
-}
-
-#' @describeIn new_suggests
-#' A stub of a suggests package, which will reference stored suggests data
-#'
-#' @export
-new_suggests_stub <- function(pkg, where = parent.frame()) {
-  structure(
-    pkg, 
-    where = where, 
-    class = c("suggests_package_stub", "suggests_package")
-  )
-}
-
-is_suggests <- function(x) {
-  inherits(x, "suggests_package")
-}
-
 load_suggests_package <- function(x, suppress = FALSE) {
-  pkg <- attr(x, "pkg")
-  callback <- attr(x, "callback")
-
   if (suggests_load_attempted(x)) {
-    if (!suppress && "delayed" %in% attr(x, "load_status")) {
-      attr(x, "load_status") <- setdiff(attr(x, "load_status"), "delayed")
-      return(invisible(callback(x)))
+    if (!suppress && "delayed" %in% x@status) {
+      x@status <- setdiff(x@status, "delayed")
+      return(invisible(x@callback(x)))
     }
 
     return()
@@ -92,7 +56,7 @@ load_suggests_package <- function(x, suppress = FALSE) {
   # if not loaded, check if required package is available
   # NOTE: versionCheck doesn't actually do anything here despite documentation
   can_load <- requireNamespace(
-    pkg,
+    x@pkg,
     versionCheck = version_requirements(x),
     quietly = TRUE
   )
@@ -103,27 +67,14 @@ load_suggests_package <- function(x, suppress = FALSE) {
     }
 
     if (suppress) {
-      attr(x, "load_status") <- c(
-        "load failed" = "failed", 
-        "using fallbacks" = "delayed"
-      )
-
+      x@status <- c("load failed" = "failed", "using fallbacks" = "delayed")
       return()
     } else {
-      return(invisible(callback(x)))
+      return(invisible(x@callback(x)))
     }
   }
 
-  attr(x, "status") <- c("loaded" = "success")
-  ns <- loadNamespace(pkg)
+  x@status <- c("loaded" = "success")
+  ns <- loadNamespace(x@pkg)
   for (n in names(ns)) x[[n]] <- ns[[n]]
-}
-
-suggests_loaded <- function(sug) {
-  ns <- get0(".__NAMESPACE__.", sug, inherits = FALSE, ifnotfound = list())
-  !is.null(ns$path)
-}
-
-suggests_load_attempted <- function(sug) {
-  exists(".__NAMESPACE__.", sug, inherits = FALSE)
 }

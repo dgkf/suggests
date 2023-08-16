@@ -65,11 +65,12 @@ be >=3.6.0.
 
 > ***Tip***
 >
-> Use `suggests::capabilities("create")` to automatically create a suggests 
-> package object that shares the package's name in your package environment.
+> Use `suggests::enable_capabilities("create")` to automatically create a
+> suggests  package object that shares the package's name in your package
+> environment.
 >
 > ```r
-> suggests::capabilities("create")
+> suggests::enable_capabilities("create")
 > suggests::import(cli)  # creates "namespace" cli
 > ```
 
